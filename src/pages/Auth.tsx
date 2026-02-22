@@ -34,56 +34,46 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (isLogin) {
-      const { error } = await signIn(email, password);
-      if (error) {
-        toast({
-          title: "Login failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        navigate("/dashboard");
-      }
-    } else {
-      if (!fullName.trim()) {
-        toast({
-          title: "Name required",
-          description: "Please enter your full name.",
-          variant: "destructive",
-        });
-        setLoading(false);
-        return;
-      }
+   if (!isLogin) {
+  if (!fullName.trim()) {
+    toast({
+      title: "Name required",
+      description: "Please enter your full name.",
+      variant: "destructive",
+    });
+    setLoading(false);
+    return;
+  }
 
-      const { error } = await signUp(email, password, fullName);
-      if (error) {
-        toast({
-          title: "Signup failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Check your email",
-          description: "We sent you a confirmation link.",
-        });
-      }
-    }
+  const { error } = await signUp(email, password, fullName, {
+    redirectTo: "https://fanciful-semifreddo-b15973.netlify.app/auth"
+  });
+
+  if (error) {
+    toast({
+      title: "Signup failed",
+      description: error.message,
+      variant: "destructive",
+    });
+  } else {
+    toast({
+      title: "Check your email",
+      description: "We sent you a confirmation link.",
+    });
+  }
+}
 
     setLoading(false);
   };
 
   return (
     <div className="relative min-h-screen flex flex-col md:flex-row overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-600">
-
       {/* Background Glow */}
       <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-3xl"></div>
       <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-blue-500/30 rounded-full blur-3xl"></div>
 
       {/* LEFT SIDE */}
       <div className="hidden md:flex w-1/2 text-white p-20 flex-col justify-center relative z-10 space-y-16">
-
         {/* Logo */}
         <div>
           <h1 className="text-5xl font-bold tracking-tight">Dmless</h1>
@@ -94,7 +84,7 @@ const Auth = () => {
 
         {/* Hero Text */}
         <div>
-<h2 className="text-3xl lg:text-4xl font-semibold leading-snug">
+          <h2 className="text-3xl lg:text-4xl font-semibold leading-snug">
             Screen candidates faster.
             <br />
             Hire smarter.
@@ -128,14 +118,8 @@ const Auth = () => {
 
       {/* RIGHT SIDE */}
       <div className="flex flex-1 items-center justify-center px-6 py-12 md:py-0 relative z-10">
-
-        <div
-          className={`w-full transition-all duration-500 ${
-            isLogin ? "max-w-md" : "max-w-lg"
-          }`}
-        >
+        <div className={`w-full transition-all duration-500 ${isLogin ? "max-w-md" : "max-w-lg"}`}>
           <Card className="rounded-3xl border border-white/20 bg-white/95 backdrop-blur-xl shadow-2xl transition-all duration-500 hover:shadow-[0_25px_70px_rgba(0,0,0,0.2)] hover:-translate-y-1">
-
             <CardHeader className="space-y-2 text-center pb-6">
               <CardTitle className="text-3xl font-bold tracking-tight">
                 {isLogin ? "Welcome back" : "Create your account"}
@@ -150,9 +134,7 @@ const Auth = () => {
             <CardContent>
               <form
                 onSubmit={handleSubmit}
-                className={`transition-all duration-300 ${
-                  isLogin ? "space-y-5" : "space-y-6"
-                }`}
+                className={`transition-all duration-300 ${isLogin ? "space-y-5" : "space-y-6"}`}
               >
                 {!isLogin && (
                   <div className="space-y-2">
